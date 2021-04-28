@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { removeFromBasket, setNumber } from '../redux/basket/basketActions'
+import { connect } from 'react-redux'
 
-const BasketItem = ({book, setBookNumber}) => {
+const BasketItem = ({book, setNumber, basket, removeFromBasket}) => {
 
-    const [number, setNumber] = useState(1)
+    const [numberInput, setNumberInput] = useState(1)
     let author = book.author != null ? book.author.split(', ').reverse().join(' ') : 'Unknown'
 
     useEffect(() => {
-        setBookNumber(book.id, number)
-    }, [number])
-
+        setNumber(book.id, numberInput)
+    }, [numberInput])
+    console.log(basket.basketFormat.books)
     const addOne = () => {
-        if (number < book.quantity) {
-            setNumber(number+1)
+        if (numberInput < book.quantity) {
+            setNumberInput(numberInput+1)
         }
     }
 
     const removeOne = () => {
-        setNumber(number-1)
+        setNumberInput(numberInput-1)
     }
 
     return (
@@ -36,16 +38,30 @@ const BasketItem = ({book, setBookNumber}) => {
             </div>
             <div className="card-footer">
                 <FontAwesomeIcon icon={faPlus} onClick={addOne} />
-                {/* <i className="fas fa-plus"></i> */}
-                <input type="number" className="number-item" placeholder={number} min="1" max={book.quantity} />
+                <input type="number" className="number-item" placeholder={numberInput} min="1" max={book.quantity} />
                 <FontAwesomeIcon icon={faMinus} onClick={removeOne} />
-                {/* <i className="fas fa-minus"></i> */}
             </div>
             <div id="basket-trash">
-                <FontAwesomeIcon icon={faTrashAlt} />
+                <FontAwesomeIcon icon={faTrashAlt} onClick={() => {
+                    removeFromBasket(book)
+                    }
+                    } />
             </div>
         </div>
     )
 }
 
-export default BasketItem
+const mapStateToProps = state => {
+    return {
+        basket: state.basket
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setNumber: (book_id, number) => dispatch(setNumber(book_id, number)),
+        removeFromBasket: (book) => dispatch(removeFromBasket(book))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BasketItem)

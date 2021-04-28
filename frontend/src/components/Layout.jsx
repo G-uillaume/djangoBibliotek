@@ -5,13 +5,13 @@ import { connect } from 'react-redux'
 import { hideNotif } from '../redux/notif/notifActions';
 import { ordersApiCall } from '../redux/orders/ordersActions';
 
-const Layout = (props) => {
+const Layout = ({notif, basket, children, hideNotif, reloadOrders}) => {
   const [token, removeToken] = useCookies(['mytoken'])
   const isAuthenticated = (!token['mytoken'] || token['mytoken'] === 'undefined') ? false : true
-
+  console.log(basket.basket.length)
   let history = useHistory()
 
-  console.log(props.notif.notif)
+  console.log(notif.notif)
 
   const logout = () => {
     removeToken(['mytoken'])
@@ -24,7 +24,7 @@ const Layout = (props) => {
       <div id="glass">
         <aside id="side">
           <Link to="/">Books</Link>
-          <Link to="/basket">My Basket <small>({props.basket.length})</small></Link>
+          <Link to="/basket">My Basket <small>({basket.basket.length})</small></Link>
           <Link to="/orders">My orders</Link>
           { !isAuthenticated && 
             <Link to="/login">Login</Link>
@@ -35,16 +35,16 @@ const Layout = (props) => {
           }
         </aside>
         <article className="article">
-        {props.children}
+        {children}
           <div className={
-            props.notif.notif === null ? "notification" : "notification on"}
+            notif.notif === null ? "notification" : "notification on"}
             onTransitionEnd={() => {
               setTimeout(() => {
-                props.hideNotif()
-                props.reloadOrders(token['mytoken'])
+                hideNotif()
+                reloadOrders(token['mytoken'])
               }, 2000)
             }}
-          ><h1>{props.notif.msg}</h1></div>
+          ><h1>{notif.msg}</h1></div>
         </article>
       </div>
     </div>

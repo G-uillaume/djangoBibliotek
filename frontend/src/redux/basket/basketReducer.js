@@ -1,17 +1,40 @@
-import { ADD_TO_BASKET, REMOVE_FROM_BASKET } from './type'
+import { ADD_TO_BASKET, REMOVE_FROM_BASKET, SET_NUMBER } from './type'
 
-const initialState = []
+const initialState = {
+    basket : [],
+    basketFormat: { books: []}
+}
 
 const basketReducer = (state = initialState, action) => {
     switch(action.type) {
         case ADD_TO_BASKET:
-            return [
+            return {
                 ...state,
-                action.payload
-            ]
+                basket: [...state.basket, action.payload.book],
+                basketFormat: { 
+                    books: [...state.basketFormat.books, action.payload.bookFormat]
+                }
+            }
         case REMOVE_FROM_BASKET:
-            state.remove(action.payload)
-            return state
+            let copyBasketFormat = [...state.basketFormat.books]
+            let indexBookFormat = copyBasketFormat.findIndex(x => x.book_id === action.payload.id)
+            copyBasketFormat.splice(indexBookFormat, 1)
+            let booksArray = [...state.basket]
+            let indexBook = booksArray.findIndex(x => x.id === action.payload.id)
+            booksArray.splice(indexBook, 1)
+            return {
+                ...state,
+                basket: booksArray,
+                basketFormat: { books: copyBasketFormat }
+            }
+        case SET_NUMBER:
+            let books = state.basketFormat.books.map(x => {
+                if (x.book_id === action.payload.book_id) {
+                    x.number = action.payload.number
+                }
+                return x
+            })
+            console.log(books, state.basketFormat.books)
         default:
             return state
     }

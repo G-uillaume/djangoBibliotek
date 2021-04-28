@@ -6,50 +6,33 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom';
 
 const Basket = ({basketState, addBasket, delBasket}) => {
-    const [orderTemp, setOrderTemp] = useState({books: []})
-    const [isLoading, setIsLoading] = useState(true)
-    console.log(orderTemp)
-    useEffect(() => {
-        let arr = basketState.map(x => {
-            return {book_id: x.id, book_title: x.title, number: 1}
-        })
-        setOrderTemp({
-            ...orderTemp,
-            books: arr
-        })
-        setIsLoading(false)
-    },[])
-
-    const setBookNumber = (book_id, number_of_book) => {
-        if (!isLoading) {
-            let book = orderTemp.books.findIndex(x => x.book_id === book_id)
-            orderTemp.books[book].number = number_of_book
-            console.log(book)
-            setOrderTemp({
-                books: [...orderTemp.books]
-
-            })
-            console.log(orderTemp)
-        }
-    }
-
+    // useEffect(() => {
+    //     let arr = basketState.basket.map(x => {
+    //         return {book_id: x.id, book_title: x.title, number: 1}
+    //     })
+    //     setOrderTemp({
+    //         ...orderTemp,
+    //         books: arr
+    //     })
+    //     setIsLoading(false)
+    // }, [])
     return (
         <>
             <h1 id="title">My basket</h1>
             
-            {basketState && basketState.length != 0 && 
+            {basketState.basket && basketState.basket.length != 0 && 
             <>
             <div className="basket-cards">
-            { basketState.map(book => {
+            { basketState.basket.map(book => {
                 return (
-                    <BasketItem key={book.id} book={book} setBookNumber={setBookNumber} />
+                    <BasketItem key={book.id} book={book} />
                 )
             })}
             </div>
-            <button id="validate-order" onClick={() => console.log(orderTemp)}>Order</button>
+            <button id="validate-order" onClick={() => console.log(basketState.basketFormat)}>Order</button>
             </>
             }
-            {!basketState.length &&
+            {!basketState.basket.length &&
                 <Link to="/">Order a book now!</Link>
             }
         </>

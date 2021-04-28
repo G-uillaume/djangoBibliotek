@@ -8,10 +8,10 @@ import { updateBasket } from '../redux/basket/basketActions'
 
 const Book = ({book, basketState, addBasket}) => {
     let author = book.author != null ? book.author.split(', ').reverse().join(' ') : 'Unknown'
-    // console.log(book.author)
+    // console.log(basketState.basket)
 
     const add = (book) => {
-        if (!basketState.includes(book)) {
+        if (!basketState.basket.includes(book)) {
             addBasket(book)
         }
     }
