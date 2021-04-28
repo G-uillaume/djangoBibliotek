@@ -1,0 +1,41 @@
+.order-card {
+    width: 80%;
+    height: 50%;
+    margin: 0 auto 15px auto;
+    padding: 20px;
+
+    background: linear-gradient(92.94deg, rgba(255, 254, 254, 0.912) -1.71%, rgba(255, 254, 254, 0.836) 101.13%);
+    box-shadow: 12px 12px 28px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+
+    display: flex;
+
+    font-family: Poppins;
+    color: rgba(77, 94, 129, 0.9);
+
+    overflow: scroll;
+}
+
+.order-card h2 {
+    text-align: center;
+    font-size: 28px;
+}
+
+.order-card .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.order-card .card-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+}
+
+.order-card .card-footer a, .order-card .card-footer a:visited {
+    text-decoration: none;
+    color: rgba(77, 94, 129, 0.9);
+}

@@ -2,6 +2,7 @@ from .models import Book, Order, Ordering
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.db import transaction, IntegrityError
+# from django.core.exceptions import DoesNotExist
 from .serializers import BookSerializer, OrderSerializer, UserSerializer
 from rest_framework import viewsets, status, mixins, generics
 from rest_framework.response import Response
@@ -15,13 +16,15 @@ class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     authentication_classes = (TokenAuthentication,)
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         print(request.user)
         if request.user.is_staff:
             return self.list(request)
         else:
-            return Response("Permission denied", status.HTTP_403_FORBIDDEN)
+            self.queryset = User.objects.filter(pk=request.user.id)
+            return self.list(request)
 
 
 class UserDetail(generics.RetrieveUpdateAPIView):
@@ -82,6 +85,7 @@ class BookDetails(generics.RetrieveUpdateAPIView):
 class OrderList(generics.ListCreateAPIView):
     queryset = Order.objects.all()
     authentication_classes = (TokenAuthentication,)
+    permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializer
 
     def get(self, request):
@@ -111,6 +115,8 @@ class OrderList(generics.ListCreateAPIView):
                 return Response(serializer, status=status.HTTP_201_CREATED)
         except IntegrityError:
             return Response("Integrity Error", status=status.HTTP_400_BAD_REQUEST)
+        # except DoesNotExist:
+        #     return Response("You have to be authenticated", status=status.HTTP_403_FORBIDDEN)
 
 
 class OrderDetails(generics.RetrieveUpdateDestroyAPIView):
@@ -118,6 +124,7 @@ class OrderDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     authentication_classes = (TokenAuthentication,)
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
         order = Order.objects.get(pk=pk)
@@ -136,6 +143,7 @@ class OrderDetails(generics.RetrieveUpdateDestroyAPIView):
         try:
             if request.user.is_staff or request.user.id == order.user.id:
                 for book in books_in_order:
+                    # bookObject = self.queryset.get(pk=book['book'])
                     bookObjects = get_object_or_404(all_books, pk=book['book'])
                     bookObjects.quantity += book['number']
                     bookObjects.save()
@@ -154,7 +162,7 @@ class OrderDetails(generics.RetrieveUpdateDestroyAPIView):
                 books_in_old_order = order.books.all()
                 books_in_request = request.data['books']
                 all_books = Book.objects.all()
-                all_books_available = Book.objects.exclude(quantity = 0)
+                # all_books_available = Book.objects.exclude(quantity = 0)
                 request_set = set()
                 old_request_set = set()
                 if request.user.is_staff or request.user.id == order.user.id:
@@ -167,7 +175,8 @@ class OrderDetails(generics.RetrieveUpdateDestroyAPIView):
 
                 # if the book is new in the order
                     for book_id in new_books_in_request:
-                        bookObject = get_object_or_404(all_books_available, pk=book_id)
+                        # bookObject = get_object_or_404(all_books_available, pk=book_id)
+                        bookObject = Book.objects.get(pk=book_id)
                         for book in books_in_request:
                             if book['book'] == bookObject.id:
                                 if bookObject.quantity >= book['number']:
@@ -179,7 +188,8 @@ class OrderDetails(generics.RetrieveUpdateDestroyAPIView):
 
                 # if a book has been removed from the order
                     for book_id in books_removed_from_request:
-                        bookObject = get_object_or_404(all_books, pk=book_id)
+                        # bookObject = get_object_or_404(all_books, pk=book_id)
+                        bookObject = Book.objects.get(pk=book_id)
                         for book in ordering_set:
                             if book.book_id == bookObject.id:
                                 bookObject.quantity += book.number

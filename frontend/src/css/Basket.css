@@ -1,0 +1,56 @@
+input[type=number] {
+    -moz-appearance: textfield;
+  }
+.basket-cards {
+    margin-top: 30px;
+    height: 400px;
+    overflow: auto;
+}
+  
+.number-item {
+    outline: none;
+    border: none;
+    width: 40px;
+    height: 30px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    text-align: center;
+    padding: 5px;
+    font-weight: 700;
+    color: rgba(77, 94, 129, 0.9);
+    font-size: 20px;
+    /* margin: 10px auto; */
+}
+
+#validate-order {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    box-shadow: 12px 12px 28px rgba(0, 0, 0, 0.25);
+    font-weight: 700;
+    color: rgba(77, 94, 129, 0.9);
+    font-size: 20px;
+    align-self: center;
+    margin: 10px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    -ms-border-radius: 30px;
+    -o-border-radius: 30px;
+}
+
+.card-footer svg {
+    cursor: pointer;
+    padding: 5px;
+    margin: 5px;
+}
+
+#basket-trash {
+    color: rgba(77, 94, 129, 0.9);
+    font-size: 1.5em;
+    margin-right: 15px;
+}

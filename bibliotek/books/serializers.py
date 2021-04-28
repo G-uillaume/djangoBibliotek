@@ -23,16 +23,19 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class OrderingSerializer(serializers.HyperlinkedModelSerializer):
-    book = serializers.ReadOnlyField(source="book.title")
+    book_id = serializers.StringRelatedField(source='book.id')
+    book_title = serializers.StringRelatedField(source='book.title')
     class Meta:
         model = Ordering
-        fields = ['book', 'number']
+        fields = [ 'book_id', 'book_title', 'number']
 
 
 class OrderSerializer(serializers.ModelSerializer):
     books = OrderingSerializer(source="ordering_set", many=True, read_only=True)
     user = serializers.StringRelatedField(many=False, read_only=True)
     # books = serializers.StringRelatedField(many=True)
+    created_at = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
+    updated_at = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
     class Meta:
         model = Order
         fields = '__all__'
