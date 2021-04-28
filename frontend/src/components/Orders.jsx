@@ -5,22 +5,24 @@ import { ordersApiCall } from '../redux/orders/ordersActions'
 import { useCookies } from 'react-cookie'
 import Order from './Order'
 import { useHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 
 const Orders = ({ordersApiData, apiOrders}) => {
 
     const [token] = useCookies(['mytoken'])
     let history = useHistory()
+    const isAuthenticated = (!token['mytoken'] || token['mytoken'] === 'undefined') ? false : true
     useEffect(() => {
-        if (ordersApiData.orders.length === 0) {
+        if (ordersApiData.orders.length === 0 && isAuthenticated) {
             apiOrders(token['mytoken'])
         }
     }, [token, apiOrders])
-
-    useEffect(() => {
-        if (!token['mytoken'] || token['mytoken'] === 'undefined') {
-            history.push('/login')
-        }
-    }, [token, history])
+    console.log(isAuthenticated)
+    // useEffect(() => {
+    //     if (!token['mytoken'] || token['mytoken'] === 'undefined') {
+    //         history.push('/login')
+    //     }
+    // }, [token, history])
 
     const displayOrdersData = ordersApiData.ordersIsLoading ? (
         <p className="load-or-error">Loading ...</p>
@@ -39,9 +41,14 @@ const Orders = ({ordersApiData, apiOrders}) => {
     return (
         <>
             <h1 id="title">My orders</h1>
+            {isAuthenticated &&
             <div className="cards">
                 {displayOrdersData}
             </div>
+            }
+            {!isAuthenticated &&
+                <Link to='/login'>Login now to see your orders!</Link>
+            }
         </>
     )
 }

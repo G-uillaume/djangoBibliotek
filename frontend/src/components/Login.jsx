@@ -14,7 +14,7 @@ const Login = () => {
 
     useEffect(() => {
         if (token['mytoken'] && token['mytoken'] !== 'undefined') {
-            history.push('/')
+            history.goBack()
         }
     }, [token, history])
 

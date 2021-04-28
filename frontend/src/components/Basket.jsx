@@ -1,21 +1,28 @@
 import React, {useEffect, useState} from 'react'
+import { useCookies } from 'react-cookie'
 import '../css/Basket.css'
 import BasketItem from './BasketItem'
 import { removeFromBasket, updateBasket } from '../redux/basket/basketActions'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { addOrderApiCall } from '../redux/orders/ordersActions'
+import { booksApiCall } from '../redux/books/booksActions'
 
-const Basket = ({basketState, addBasket, delBasket}) => {
-    // useEffect(() => {
-    //     let arr = basketState.basket.map(x => {
-    //         return {book_id: x.id, book_title: x.title, number: 1}
-    //     })
-    //     setOrderTemp({
-    //         ...orderTemp,
-    //         books: arr
-    //     })
-    //     setIsLoading(false)
-    // }, [])
+const Basket = ({basketState, makeOrder, reloadBooks}) => {
+
+    const [token] = useCookies(['mytoken'])
+    let history = useHistory()
+
+    const orderNow = () => {
+        if (!token['mytoken'] || token['mytoken'] === 'undefined') {
+            history.push('/login')
+        } else {
+            makeOrder(basketState.basketFormat, token['mytoken'])
+            reloadBooks()
+            history.push('/orders')
+        }
+    }
+    console.log(history)
     return (
         <>
             <h1 id="title">My basket</h1>
@@ -29,7 +36,7 @@ const Basket = ({basketState, addBasket, delBasket}) => {
                 )
             })}
             </div>
-            <button id="validate-order" onClick={() => console.log(basketState.basketFormat)}>Order</button>
+            <button id="validate-order" onClick={orderNow}>Order</button>
             </>
             }
             {!basketState.basket.length &&
@@ -48,7 +55,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         addBasket: (book) => dispatch(updateBasket(book)),
-        delBasket: (book) => dispatch(removeFromBasket(book))
+        delBasket: (book) => dispatch(removeFromBasket(book)),
+        makeOrder: (body, token) => dispatch(addOrderApiCall(body, token)),
+        reloadBooks: () => dispatch(booksApiCall())
     }
 }
 

@@ -1,4 +1,4 @@
-import { ADD_TO_BASKET, REMOVE_FROM_BASKET, SET_NUMBER } from './type'
+import { ADD_TO_BASKET, EMPTY_BASKET, REMOVE_FROM_BASKET, SET_NUMBER } from './type'
 
 const initialState = {
     basket : [],
@@ -28,13 +28,21 @@ const basketReducer = (state = initialState, action) => {
                 basketFormat: { books: copyBasketFormat }
             }
         case SET_NUMBER:
-            let books = state.basketFormat.books.map(x => {
-                if (x.book_id === action.payload.book_id) {
-                    x.number = action.payload.number
-                }
-                return x
-            })
-            console.log(books, state.basketFormat.books)
+            let index = state.basketFormat.books.findIndex(x => x.book === action.payload.book_id)
+            let copy = [...state.basketFormat.books]
+            let book = copy[index]
+            book.number = action.payload.number
+            copy.splice(index, 1, book)
+            return {
+                ...state,
+                basketFormat: { books: copy }
+            }
+        case EMPTY_BASKET:
+            return {
+                ...state,
+                basket: [],
+                basketFormat: { books: [] }
+            }
         default:
             return state
     }

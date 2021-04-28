@@ -1,6 +1,7 @@
 // import axios from 'axios'
-import { LOAD_ORDERS, LOAD_ORDERS_SUCCESS, LOAD_ORDERS_ERROR, UPDATE_ORDER, UPDATE_ORDER_SUCCESS, UPDATE_ORDER_ERROR, DELETE_ORDER, DELETE_ORDER_SUCCESS, DELETE_ORDER_ERROR } from './type'
+import { LOAD_ORDERS, LOAD_ORDERS_SUCCESS, LOAD_ORDERS_ERROR, UPDATE_ORDER, UPDATE_ORDER_SUCCESS, UPDATE_ORDER_ERROR, DELETE_ORDER, DELETE_ORDER_SUCCESS, DELETE_ORDER_ERROR, ADD_ORDER, ADD_ORDER_ERROR, ADD_ORDER_SUCCESS, EMPTY_ORDERS } from './type'
 import { displayNotif } from '../notif/notifActions'
+import { emptyBasket } from '../basket/basketActions'
 
 export const loadOrders = () => {
     return {
@@ -147,5 +148,63 @@ export const deleteOrderApiCall = (order_id, body, token) => {
             dispatch(deleteOrderError(err))
             dispatch(displayNotif())
         })
+    }
+}
+
+export const addOrder = () => {
+    return {
+        type: ADD_ORDER
+    }
+}
+
+export const addOrderSucces = order => {
+    return {
+        type: ADD_ORDER_SUCCESS,
+        payload: order
+    }
+}
+
+export const addOrderError = error => {
+    return {
+        type: ADD_ORDER_ERROR,
+        payload: error
+    }
+}
+
+export const addOrderApiCall = (body, token) => {
+    return dispatch => {
+        dispatch(addOrder())
+
+        fetch('http://127.0.0.1:8000/api/orders/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            },
+            body: JSON.stringify(body)
+        })
+        .then(res => {
+            if (res.status !== 201) {
+                console.log(res)
+                dispatch(addOrderError(res))
+                dispatch(displayNotif())
+            } else {
+                console.log(res)
+                dispatch(addOrderSucces(res))
+                dispatch(ordersApiCall(token))
+                dispatch(emptyBasket())
+            }
+            // return res.json()
+        })
+        .catch(err => {
+            dispatch(addOrderError(err))
+            dispatch(displayNotif())
+        })
+    }
+}
+
+export const emptyOrders = () => {
+    return {
+        type: EMPTY_ORDERS
     }
 }

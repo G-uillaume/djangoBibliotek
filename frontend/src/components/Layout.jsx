@@ -3,18 +3,21 @@ import { useCookies } from 'react-cookie';
 import { useHistory, Link } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { hideNotif } from '../redux/notif/notifActions';
-import { ordersApiCall } from '../redux/orders/ordersActions';
+import { emptyOrders, ordersApiCall } from '../redux/orders/ordersActions';
+import { emptyBasket } from '../redux/basket/basketActions';
 
-const Layout = ({notif, basket, children, hideNotif, reloadOrders}) => {
+const Layout = ({notif, basket, children, hideNotif, reloadOrders, emptyBasket, emptyOrders}) => {
   const [token, removeToken] = useCookies(['mytoken'])
   const isAuthenticated = (!token['mytoken'] || token['mytoken'] === 'undefined') ? false : true
   console.log(basket.basket.length)
   let history = useHistory()
 
-  console.log(notif.notif)
+  console.log(history.location.pathname)
 
   const logout = () => {
     removeToken(['mytoken'])
+    emptyBasket()
+    emptyOrders()
     history.push('/')
   }
   return (
@@ -25,7 +28,7 @@ const Layout = ({notif, basket, children, hideNotif, reloadOrders}) => {
         <aside id="side">
           <Link to="/">Books</Link>
           <Link to="/basket">My Basket <small>({basket.basket.length})</small></Link>
-          <Link to="/orders">My orders</Link>
+          <Link to='/orders'>My orders</Link>
           { !isAuthenticated && 
             <Link to="/login">Login</Link>
           }
@@ -61,7 +64,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     hideNotif: () => dispatch(hideNotif()),
-    reloadOrders: (token) => dispatch(ordersApiCall(token))
+    reloadOrders: (token) => dispatch(ordersApiCall(token)),
+    emptyBasket: () => dispatch(emptyBasket()),
+    emptyOrders: () => dispatch(emptyOrders())
   }
 }
 

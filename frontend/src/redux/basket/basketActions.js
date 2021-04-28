@@ -1,7 +1,7 @@
-import { ADD_TO_BASKET, REMOVE_FROM_BASKET, SET_NUMBER } from './type'
+import { ADD_TO_BASKET, EMPTY_BASKET, REMOVE_FROM_BASKET, SET_NUMBER } from './type'
 
 export const updateBasket = (book) => {
-    let bookFormat = { book_id: book.id, book_title: book.title, number: 1}
+    let bookFormat = { book: book.id, number: 1}
     return {
         type: ADD_TO_BASKET,
         payload: { book, bookFormat }
@@ -19,5 +19,11 @@ export const setNumber = (book_id, number) => {
     return {
         type: SET_NUMBER,
         payload: { book_id, number}
+    }
+}
+
+export const emptyBasket = () => {
+    return {
+        type: EMPTY_BASKET
     }
 }
