@@ -3,18 +3,28 @@ import '../css/Books.css'
 import Book from './Book'
 import { connect } from 'react-redux'
 import { booksApiCall } from '../redux/books/booksActions'
+import { faBookmark } from '@fortawesome/free-solid-svg-icons'
 
 const Books = ({booksApiData, apiBooks}) => {
+    const [input, setInput] = useState('')
+    const [books, setBooks] = useState([])
     console.log(booksApiData)
-
     useEffect(() => {
         if (booksApiData.books.length == 0) {
             apiBooks()
         }
     }, [apiBooks])
-    
-    const [input, setInput] = useState('')
 
+    useEffect(() => {
+        setBooks(
+            booksApiData.books.filter(book => {
+                return (book.title.toLowerCase().includes(input.toLowerCase()) 
+                || (book.author && book.author.toLowerCase().includes(input.toLowerCase()))
+                || book.genre.toLowerCase().includes(input.toLowerCase()))
+            })
+        )
+    }, [input, booksApiData.books])
+    
     const handleChange = (e) => {
         setInput(e.target.value)
     }
@@ -30,7 +40,6 @@ const Books = ({booksApiData, apiBooks}) => {
         booksApiData.books.map(book => {
             return (
                 <Book key={book.id} book={book} />
-                
             )
         })
     )
@@ -40,7 +49,22 @@ const Books = ({booksApiData, apiBooks}) => {
             <h1 id="title">Books</h1>
             <input onChange={handleChange} value={input} id="search" type="text" placeholder="Search" />
             <div className="cards">
-                {displayBooksApiData}
+                {
+                    booksApiData.isLoading ? (
+                        <p className="load-or-error">Loading ...</p>
+                    )
+                    : booksApiData.error ? (
+                        <p className="load-or-error">{booksApiData.error}</p>
+                    )
+                    : (
+                        books.map(book => {
+                            return (
+                                <Book key={book.id} book={book} />
+                                
+                            )
+                        })
+                    )
+                }
             </div>
         </>
     )

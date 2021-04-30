@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import '../css/Login.css'
 import { useCookies } from 'react-cookie'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import APIService from '../APIService'
 
 const Login = () => {
@@ -38,6 +38,9 @@ const Login = () => {
                         <input type="password" name="password" id="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
                     </p>
                     <button onClick={login}>Login</button>
+                    <p> 
+                        <Link to='/signup'>Register now!</Link>
+                    </p>
                 </div>
             </div>
         </>

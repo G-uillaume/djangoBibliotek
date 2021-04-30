@@ -10,6 +10,7 @@ import { CookiesProvider } from 'react-cookie';
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import Layout from './components/Layout';
+import SignUp from './components/SignUp';
 
 function Router() {
   return (
@@ -24,6 +25,7 @@ function Router() {
             <Route path='/orders' component={Orders} /> 
             <Route path='/update' component={OrderUpdate} />
             <Route path='/login' component={Login} />
+            <Route path='/signup' component={SignUp} />
           </Switch>
         </Layout>
 

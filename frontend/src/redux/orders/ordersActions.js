@@ -9,7 +9,7 @@ export const loadOrders = () => {
     }
 }
 
-export const loadOrdersSucces = orders => {
+export const loadOrdersSuccess = orders => {
     return {
         type: LOAD_ORDERS_SUCCESS,
         payload: orders
@@ -41,7 +41,7 @@ export const ordersApiCall = (token) => {
             return res.json()
         })
         .then(res => {
-            dispatch(loadOrdersSucces(res))
+            dispatch(loadOrdersSuccess(res))
         })
         .catch(err => {
             dispatch(loadOrdersError(err))
@@ -55,7 +55,7 @@ export const loadUpdateOrder = () => {
     }
 }
 
-export const updateOrderSucces = order => {
+export const updateOrderSuccess = order => {
     return {
         type: UPDATE_ORDER_SUCCESS,
         payload: order
@@ -88,7 +88,7 @@ export const updateOrderApiCall = (order_id, body, token) => {
                 dispatch(displayNotif())
             } else {
                 console.log(res)
-                dispatch(updateOrderSucces(res))
+                dispatch(updateOrderSuccess(res))
                 dispatch(ordersApiCall(token))
             }
             // return res.json()
@@ -106,7 +106,7 @@ export const deleteOrder = () => {
     }
 }
 
-export const deleteOrderSucces = order => {
+export const deleteOrderSuccess = order => {
     return {
         type: DELETE_ORDER_SUCCESS,
         payload: order
@@ -139,7 +139,7 @@ export const deleteOrderApiCall = (order_id, body, token) => {
                 dispatch(displayNotif())
             } else {
                 console.log(res)
-                dispatch(deleteOrderSucces(res))
+                dispatch(deleteOrderSuccess(res))
                 dispatch(ordersApiCall(token))
             }
             // return res.json()
@@ -157,7 +157,7 @@ export const addOrder = () => {
     }
 }
 
-export const addOrderSucces = order => {
+export const addOrderSuccess = order => {
     return {
         type: ADD_ORDER_SUCCESS,
         payload: order
@@ -190,7 +190,7 @@ export const addOrderApiCall = (body, token) => {
                 dispatch(displayNotif())
             } else {
                 console.log(res)
-                dispatch(addOrderSucces(res))
+                dispatch(addOrderSuccess(res))
                 dispatch(ordersApiCall(token))
                 dispatch(emptyBasket())
             }

@@ -12,7 +12,7 @@ from rest_framework.decorators import action
 from rest_framework import permissions
 from django.http import HttpResponseRedirect
 
-class UserList(generics.ListCreateAPIView):
+class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     authentication_classes = (TokenAuthentication,)
@@ -25,6 +25,10 @@ class UserList(generics.ListCreateAPIView):
         else:
             self.queryset = User.objects.filter(pk=request.user.id)
             return self.list(request)
+
+class UserCreate(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class UserDetail(generics.RetrieveUpdateAPIView):
@@ -83,17 +87,20 @@ class BookDetails(generics.RetrieveUpdateAPIView):
 
 
 class OrderList(generics.ListCreateAPIView):
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().order_by('-created_at')
     authentication_classes = (TokenAuthentication,)
     permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializer
+
+    # ordering_fields = ('updated_at', 'created_at')
+    # ordering = ('-created_at')
 
     def get(self, request):
         user = request.user
         if user.is_staff:
             return self.list(request)
         else:
-            self.queryset = Order.objects.filter(user=user)
+            self.queryset = Order.objects.filter(user=user).order_by('-created_at')
             return self.list(request)
 
     def post(self, request):

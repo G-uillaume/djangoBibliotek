@@ -18,6 +18,8 @@
     background-color: #fff;
     outline: white;
     border-width: 3px;
+    color: #4D5E81;
+    font-weight: 600;
 }
 
 .cards {

@@ -13,6 +13,9 @@ commaout = csv.writer(fileout, delimiter=',')
 i = 1
 for row in tabin:
     # row.insert(0, i)
+    for i in range(len(row)):
+        if type(row[i]) == str:
+            row[i] = row[i].replace('_', ' ')
     row.append(random.randint(0, 20))
     row.append(random.randrange(10, 101, 10))
     commaout.writerow(row)

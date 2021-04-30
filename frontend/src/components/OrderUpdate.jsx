@@ -145,7 +145,7 @@ const OrderUpdate = ({ location, booksApiData, apiOrders, ordersApiData, apiBook
                                 </div>
                                 <div id="number-input">
                                     <FontAwesomeIcon onClick={() => removeOne(book.book_id)} icon={faMinus}/>
-                                    <input id={`number${book.book_id}`} type="number" value={book.number} />
+                                    <input id={`number${book.book_id}`} type="number" value={book.number} readOnly />
                                     <FontAwesomeIcon onClick={() => addOne(book.book_id)} icon={faPlus}/>
                                 </div>
                             </div>

@@ -4,11 +4,11 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Book(models.Model):
     title = models.CharField(max_length=255)
-    author = models.CharField(max_length=255, null=True)
+    author = models.CharField(max_length=255, default='Unknown') 
     genre = models.CharField(max_length=255, null=True)
     height = models.IntegerField(null=True)
     description = models.TextField(null=True)
-    publisher = models.CharField(max_length=255, null=True)
+    publisher = models.CharField(max_length=255, default="Unknown")
     quantity = models.IntegerField(null=True)
     ratings = models.IntegerField(null=True)
 

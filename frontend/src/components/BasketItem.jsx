@@ -20,7 +20,9 @@ const BasketItem = ({book, setNumber, basket, removeFromBasket}) => {
     }
 
     const removeOne = () => {
-        setNumberInput(numberInput-1)
+        if (numberInput > 1) {
+            setNumberInput(numberInput-1)
+        }
     }
 
     return (
@@ -38,7 +40,7 @@ const BasketItem = ({book, setNumber, basket, removeFromBasket}) => {
             </div>
             <div className="card-footer">
                 <FontAwesomeIcon icon={faPlus} onClick={addOne} />
-                <input type="number" className="number-item" placeholder={numberInput} min="1" max={book.quantity} />
+                <input type="number" className="number-item" placeholder={numberInput} min="1" max={book.quantity} readOnly/>
                 <FontAwesomeIcon icon={faMinus} onClick={removeOne} />
             </div>
             <div id="basket-trash">

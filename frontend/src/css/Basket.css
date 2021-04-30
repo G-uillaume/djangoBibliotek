@@ -22,6 +22,7 @@ input[type=number] {
     font-weight: 700;
     color: rgba(77, 94, 129, 0.9);
     font-size: 20px;
+    cursor: default;
     /* margin: 10px auto; */
 }
 
